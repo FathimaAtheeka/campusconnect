@@ -19,22 +19,6 @@ const itemSchema = z.object({
   location: z.string().trim().max(120).optional(),
 });
 
-const groupSchema = z.object({
-  moduleCode: z.string().trim().min(2).max(20),
-  title: z.string().trim().min(2).max(120),
-  description: z.string().trim().max(1000).optional(),
-  schedule: z.string().trim().max(200).optional(),
-  capacity: z.coerce.number().int().min(2).max(100).optional(),
-});
-
-const tutorSchema = z.object({
-  moduleCode: z.string().trim().min(2).max(20),
-  type: z.enum(["offer", "request"]),
-  hourlyRate: z.coerce.number().min(0).optional(),
-  availability: z.string().trim().max(200).optional(),
-  description: z.string().trim().max(1000).optional(),
-});
-
 const roleUpdateSchema = z.object({
   role: z.enum(["student", "admin"]),
 });
@@ -43,7 +27,5 @@ module.exports = {
   registerSchema,
   loginSchema,
   itemSchema,
-  groupSchema,
-  tutorSchema,
   roleUpdateSchema,
 };

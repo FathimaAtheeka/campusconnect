@@ -1,165 +1,94 @@
-# CampusConnect 🎓
+# CampusConnect
 
-> A student life hub solving three real campus problems: **Lost & Found**, **Study Groups**, and **Peer Tutoring**.
+> Campus **lost & found**: post items with photos, search, and mark listings claimed.
 
 Built for **IT2234 — Web Services and Technology** as the ICA-03 final project.
 
 ---
 
-## 📌 Problem Description
+## Problem
 
-University students rely on fragmented, unstructured WhatsApp groups to:
-- Report lost items or post things they've found.
-- Find peers to study with for specific modules.
-- Connect with tutors (or offer tutoring) for modules they're weak/strong in.
+Students often post lost and found items in scattered chat groups where messages are hard to search and easy to miss.
 
-This information gets buried in chat history, is never searchable, and excludes students who aren't in the right groups.
+## Solution
 
-## 💡 Proposed Solution
-
-**CampusConnect** is a centralised, searchable web platform where students log in once and can:
-- Post and search **lost & found** items with photos and locations.
-- Create or join **study groups** for any module with a capacity limit.
-- Post **tutoring offers** or **tutoring requests** by module code.
-- Admin users can moderate posts and manage user accounts.
+**CampusConnect** is a small web app with JWT auth, admin user management, and a lost & found board with image uploads, filters, and pagination.
 
 ---
 
-## ✨ Features
+## Features
 
-- 🔐 **JWT authentication** (register / login / `/me`)
-- 👥 **Role-based access control** (student / admin)
-- 📦 **Full CRUD** on 4 collections: Users, Items, StudyGroups, TutorOffers
-- 🖼️ **Image uploads** for lost & found items (Multer, 2MB limit, jpg/png/webp)
-- 🔎 **Search, filter, and pagination** on every list endpoint
-- ✅ **Zod validation** on all write operations
-- 🛡️ **Centralised error handling** with proper HTTP status codes
-- 🗂️ **Clean MVC structure** (routes → controllers → models)
+- JWT authentication (register / login / `/me`)
+- Role-based access (student / admin)
+- CRUD for **Users** and **Items** (lost & found)
+- Image uploads for items (Multer, size/type limits)
+- Text search, filters, and pagination on list endpoints
+- Zod validation on writes
+- Express MVC layout (routes → controllers → models)
 
 ---
 
-## 🛠️ Technologies Used
+## Tech
 
 | Layer | Tech |
 |---|---|
-| Runtime | Node.js |
-| Framework | Express.js |
-| Database | MongoDB + Mongoose |
-| Auth | JSON Web Tokens (jsonwebtoken) + bcryptjs |
+| API | Node.js, Express, MongoDB, Mongoose |
+| Auth | JWT, bcryptjs |
 | Validation | Zod |
-| File Upload | Multer |
-| Logging | Morgan |
-| Testing | Postman |
-| Version Control | Git + GitHub |
-| **Optional Frontend** | React.js + Vite + Tailwind CSS |
+| Frontend | React, TanStack Router/Start, Vite, Tailwind |
 
 ---
 
-## 📡 API Endpoints
-
-Base URL: `http://localhost:5000`
+## API (base: `http://localhost:5000`)
 
 ### Auth
+
 | Method | Endpoint | Auth | Description |
 |---|---|---|---|
-| POST | `/api/auth/register` | — | Register new user |
+| POST | `/api/auth/register` | — | Register |
 | POST | `/api/auth/login` | — | Login, returns JWT |
-| GET  | `/api/auth/me` | ✅ | Current user info |
+| GET | `/api/auth/me` | ✅ | Current user |
 
-### Users (admin-only)
+### Users (admin)
+
 | Method | Endpoint | Description |
 |---|---|---|
-| GET    | `/api/users?page=1&limit=10&q=` | List users |
-| PATCH  | `/api/users/:id/role` | Change role |
+| GET | `/api/users?page=1&limit=10&q=` | List users |
+| PATCH | `/api/users/:id/role` | Change role |
 | DELETE | `/api/users/:id` | Delete user |
 
-### Lost & Found Items
+### Items (lost & found)
+
 | Method | Endpoint | Auth | Description |
 |---|---|---|---|
-| GET    | `/api/items?type=lost&category=&q=&page=1&limit=10` | — | List items |
-| GET    | `/api/items/:id` | — | Get one item |
-| POST   | `/api/items` (multipart) | ✅ | Create item with image |
-| PUT    | `/api/items/:id` | ✅ owner/admin | Update item |
-| PATCH  | `/api/items/:id/claim` | ✅ | Mark as claimed |
-| DELETE | `/api/items/:id` | ✅ owner/admin | Delete item |
+| GET | `/api/items?type=&category=&q=&page=&limit=` | — | List |
+| GET | `/api/items/:id` | — | Get one |
+| POST | `/api/items` (multipart) | ✅ | Create |
+| PUT | `/api/items/:id` | ✅ owner/admin | Update |
+| PATCH | `/api/items/:id/claim` | ✅ | Mark claimed |
+| DELETE | `/api/items/:id` | ✅ owner/admin | Delete |
 
-### Study Groups
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| GET    | `/api/groups?module=IT2234&q=&page=1` | — | List groups |
-| GET    | `/api/groups/:id` | — | Get group |
-| POST   | `/api/groups` | ✅ | Create group |
-| PUT    | `/api/groups/:id` | ✅ owner/admin | Update |
-| POST   | `/api/groups/:id/join` | ✅ | Join group |
-| POST   | `/api/groups/:id/leave` | ✅ | Leave group |
-| DELETE | `/api/groups/:id` | ✅ owner/admin | Delete |
+### Health
 
-### Tutoring
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| GET    | `/api/tutors?module=&type=offer&page=1` | — | List offers/requests |
-| GET    | `/api/tutors/:id` | — | Get one |
-| POST   | `/api/tutors` | ✅ | Create offer/request |
-| PUT    | `/api/tutors/:id` | ✅ owner/admin | Update |
-| DELETE | `/api/tutors/:id` | ✅ owner/admin | Delete |
-
-### Example Requests
-
-**Register**
-```bash
-curl -X POST http://localhost:5000/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Nimal","email":"nimal@uni.lk","password":"secret123"}'
-```
-
-**Login**
-```bash
-curl -X POST http://localhost:5000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"nimal@uni.lk","password":"secret123"}'
-```
-
-**Create lost item (with image)**
-```bash
-curl -X POST http://localhost:5000/api/items \
-  -H "Authorization: Bearer <YOUR_TOKEN>" \
-  -F "title=Black backpack" \
-  -F "description=Lost near the library on Monday" \
-  -F "type=lost" \
-  -F "category=bag" \
-  -F "location=Main Library" \
-  -F "image=@/path/to/photo.jpg"
-```
-
-**Create study group**
-```bash
-curl -X POST http://localhost:5000/api/groups \
-  -H "Authorization: Bearer <YOUR_TOKEN>" \
-  -H "Content-Type: application/json" \
-  -d '{"moduleCode":"IT2234","title":"Express.js exam prep","schedule":"Sat 4pm","capacity":8}'
-```
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/health` | Simple OK payload |
 
 ---
 
-## 🚀 Setup Instructions
+## Setup
 
-### Prerequisites
-- Node.js **v18+**
-- MongoDB running locally **or** a free MongoDB Atlas cluster
-- (Optional) Postman for testing
+### Backend
 
-### 1. Clone & install
 ```bash
-git clone https://github.com/<your-username>/campusconnect.git
-cd campusconnect/backend
+cd backend
 npm install
+cp .env.example .env   # if present; else create .env — see earlier notes
+npm run dev
 ```
 
-### 2. Configure environment
-```bash
-cp .env.example .env
-```
-Edit `.env`:
+Example `.env`:
+
 ```env
 PORT=5000
 MONGODB_URI=mongodb://127.0.0.1:27017/campusconnect
@@ -168,54 +97,46 @@ JWT_EXPIRES_IN=7d
 CLIENT_ORIGIN=http://localhost:5173
 ```
 
-### 3. Run the server
+### Frontend
+
 ```bash
-npm run dev    # development with auto-reload
-# or
-npm start      # production
+cd frontend
+npm install
+npm run dev
 ```
 
-Server starts at **http://localhost:5000**.
+Run API and web together (from `frontend`):
 
-### 4. Test with Postman
-Import `postman/CampusConnect.postman_collection.json` into Postman. The collection auto-saves your JWT token after login so all protected endpoints work immediately.
+```bash
+npm run dev:all
+```
+
+Import `postman/CampusConnect.postman_collection.json` for API tests.
 
 ---
 
-## 📁 Project Structure
+## Repo layout
 
 ```
-backend/
-├── src/
-│   ├── config/db.js              # MongoDB connection
-│   ├── models/                   # Mongoose schemas
-│   │   ├── User.js
-│   │   ├── Item.js
-│   │   ├── StudyGroup.js
-│   │   └── TutorOffer.js
-│   ├── routes/                   # Route definitions
-│   ├── controllers/              # Request handlers
-│   ├── middleware/               # auth, role, upload, error
-│   ├── utils/                    # validators, pagination
-│   └── app.js                    # Express app setup
-├── uploads/                      # Uploaded images (gitignored)
-├── .env.example
-├── server.js                     # Entry point
-└── package.json
+backend/          # Express API
+frontend/         # Vite + TanStack Start app
+postman/          # Postman collection
 ```
 
 ---
 
-## 🧑‍💻 How to Make the First Admin
+## First admin
 
-After registering normally, open MongoDB shell or Compass and run:
+After registering, in MongoDB:
+
 ```js
 db.users.updateOne({ email: "you@uni.lk" }, { $set: { role: "admin" } })
 ```
-Now login again to get a token with admin privileges.
+
+Log in again for an admin JWT.
 
 ---
 
-## 📝 License
+## License
 
-MIT — Built for educational purposes.
+MIT — educational use.

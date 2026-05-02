@@ -1,7 +1,7 @@
 {
   "name": "campusconnect-backend",
   "version": "1.0.0",
-  "description": "CampusConnect REST API — Lost & Found, Study Groups, Peer Tutoring",
+  "description": "CampusConnect REST API — Lost & Found",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

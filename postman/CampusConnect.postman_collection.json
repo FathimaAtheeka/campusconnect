@@ -2,15 +2,13 @@
   "info": {
     "name": "CampusConnect API",
     "_postman_id": "cc-001-campusconnect",
-    "description": "Full CRUD collection for CampusConnect — Lost & Found, Study Groups, Peer Tutoring.",
+    "description": "CampusConnect — Auth, Users (admin), Lost & Found items.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
     { "key": "baseUrl", "value": "http://localhost:5000" },
     { "key": "token", "value": "" },
     { "key": "itemId", "value": "" },
-    { "key": "groupId", "value": "" },
-    { "key": "tutorId", "value": "" },
     { "key": "userId", "value": "" }
   ],
   "item": [
@@ -184,142 +182,6 @@
             "method": "DELETE",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
             "url": "{{baseUrl}}/api/items/{{itemId}}"
-          }
-        }
-      ]
-    },
-    {
-      "name": "Study Groups",
-      "item": [
-        {
-          "name": "List groups",
-          "request": { "method": "GET", "url": "{{baseUrl}}/api/groups?page=1&limit=10" }
-        },
-        {
-          "name": "Create group",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "const json = pm.response.json();",
-                  "if (json.group && json.group._id) pm.collectionVariables.set('groupId', json.group._id);"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" },
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "url": "{{baseUrl}}/api/groups",
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"moduleCode\": \"IT2234\",\n  \"title\": \"Express.js exam prep\",\n  \"description\": \"Reviewing REST + Mongo\",\n  \"schedule\": \"Sat 4pm\",\n  \"capacity\": 8\n}"
-            }
-          }
-        },
-        {
-          "name": "Get group",
-          "request": { "method": "GET", "url": "{{baseUrl}}/api/groups/{{groupId}}" }
-        },
-        {
-          "name": "Update group",
-          "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" },
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "url": "{{baseUrl}}/api/groups/{{groupId}}",
-            "body": { "mode": "raw", "raw": "{\n  \"title\": \"IT2234 — Final exam prep\"\n}" }
-          }
-        },
-        {
-          "name": "Join group",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
-            "url": "{{baseUrl}}/api/groups/{{groupId}}/join"
-          }
-        },
-        {
-          "name": "Leave group",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
-            "url": "{{baseUrl}}/api/groups/{{groupId}}/leave"
-          }
-        },
-        {
-          "name": "Delete group",
-          "request": {
-            "method": "DELETE",
-            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
-            "url": "{{baseUrl}}/api/groups/{{groupId}}"
-          }
-        }
-      ]
-    },
-    {
-      "name": "Tutoring",
-      "item": [
-        {
-          "name": "List tutors",
-          "request": { "method": "GET", "url": "{{baseUrl}}/api/tutors?type=offer&page=1" }
-        },
-        {
-          "name": "Create offer",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "const json = pm.response.json();",
-                  "if (json.offer && json.offer._id) pm.collectionVariables.set('tutorId', json.offer._id);"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" },
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "url": "{{baseUrl}}/api/tutors",
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"moduleCode\": \"IT2234\",\n  \"type\": \"offer\",\n  \"hourlyRate\": 500,\n  \"availability\": \"Weekends\",\n  \"description\": \"Backend specialist\"\n}"
-            }
-          }
-        },
-        {
-          "name": "Get offer",
-          "request": { "method": "GET", "url": "{{baseUrl}}/api/tutors/{{tutorId}}" }
-        },
-        {
-          "name": "Update offer",
-          "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" },
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "url": "{{baseUrl}}/api/tutors/{{tutorId}}",
-            "body": { "mode": "raw", "raw": "{\n  \"hourlyRate\": 600\n}" }
-          }
-        },
-        {
-          "name": "Delete offer",
-          "request": {
-            "method": "DELETE",
-            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
-            "url": "{{baseUrl}}/api/tutors/{{tutorId}}"
           }
         }
       ]

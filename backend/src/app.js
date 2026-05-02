@@ -6,8 +6,6 @@ const path = require("path");
 const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes");
 const itemRoutes = require("./routes/item.routes");
-const groupRoutes = require("./routes/group.routes");
-const tutorRoutes = require("./routes/tutor.routes");
 const errorHandler = require("./middleware/error");
 
 const app = express();
@@ -23,11 +21,13 @@ app.get("/", (_req, res) =>
   res.json({ name: "CampusConnect API", status: "ok", version: "1.0.0" })
 );
 
+app.get("/api/health", (_req, res) => {
+  res.json({ status: "ok", service: "CampusConnect API" });
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/items", itemRoutes);
-app.use("/api/groups", groupRoutes);
-app.use("/api/tutors", tutorRoutes);
 
 app.use((req, res) => res.status(404).json({ error: { message: "Not found" } }));
 app.use(errorHandler);
