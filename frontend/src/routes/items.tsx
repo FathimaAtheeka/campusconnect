@@ -44,6 +44,7 @@ type Item = {
   imageUrl?: string;
   status: "open" | "claimed";
   postedBy?: { _id: string; name: string } | string;
+  claimedBy?: { _id: string; name: string; email?: string } | string;
   createdAt: string;
 };
 
@@ -169,7 +170,15 @@ function ItemsPage() {
                     )}
                   </div>
                   {it.status === "claimed" && (
-                    <Badge variant="secondary">Claimed</Badge>
+                    <div className="space-y-1">
+                      <Badge variant="secondary">Claimed</Badge>
+                      {typeof it.claimedBy !== "string" && it.claimedBy?.name ? (
+                        <p className="text-xs text-muted-foreground">
+                          Claimed by {it.claimedBy.name}
+                          {it.claimedBy.email ? ` (${it.claimedBy.email})` : ""}
+                        </p>
+                      ) : null}
+                    </div>
                   )}
                   {isAuthenticated && (
                     <div className="flex flex-wrap gap-2 pt-2">

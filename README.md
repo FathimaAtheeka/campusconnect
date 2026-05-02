@@ -23,6 +23,7 @@ Students often post lost and found items in scattered chat groups where messages
 - CRUD for **Users** and **Items** (lost & found)
 - Image uploads for items (Multer, size/type limits)
 - Text search, filters, and pagination on list endpoints
+- Claim tracking so claimed items record who claimed them
 - Zod validation on writes
 - Express MVC layout (routes → controllers → models)
 
@@ -65,7 +66,7 @@ Students often post lost and found items in scattered chat groups where messages
 | GET | `/api/items/:id` | — | Get one |
 | POST | `/api/items` (multipart) | ✅ | Create |
 | PUT | `/api/items/:id` | ✅ owner/admin | Update |
-| PATCH | `/api/items/:id/claim` | ✅ | Mark claimed |
+| PATCH | `/api/items/:id/claim` | ✅ | Mark claimed and record who claimed it |
 | DELETE | `/api/items/:id` | ✅ owner/admin | Delete |
 
 ### Health

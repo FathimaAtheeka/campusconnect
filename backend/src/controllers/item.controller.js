@@ -12,7 +12,12 @@ exports.list = async (req, res, next) => {
     if (req.query.q) filter.$text = { $search: req.query.q };
 
     const [data, total] = await Promise.all([
-      Item.find(filter).populate("postedBy", "name email").sort({ createdAt: -1 }).skip(skip).limit(limit),
+      Item.find(filter)
+        .populate("postedBy", "name email")
+        .populate("claimedBy", "name email")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
       Item.countDocuments(filter),
     ]);
     res.json(buildPageResult({ data, total, page, limit }));
@@ -23,7 +28,9 @@ exports.list = async (req, res, next) => {
 
 exports.get = async (req, res, next) => {
   try {
-    const item = await Item.findById(req.params.id).populate("postedBy", "name email");
+    const item = await Item.findById(req.params.id)
+      .populate("postedBy", "name email")
+      .populate("claimedBy", "name email");
     if (!item) return res.status(404).json({ error: { message: "Item not found" } });
     res.json({ item });
   } catch (err) {
@@ -63,9 +70,11 @@ exports.claim = async (req, res, next) => {
   try {
     const item = await Item.findByIdAndUpdate(
       req.params.id,
-      { status: "claimed" },
+      { status: "claimed", claimedBy: req.user._id, claimedAt: new Date() },
       { new: true }
-    );
+    )
+      .populate("postedBy", "name email")
+      .populate("claimedBy", "name email");
     if (!item) return res.status(404).json({ error: { message: "Item not found" } });
     res.json({ item });
   } catch (err) {

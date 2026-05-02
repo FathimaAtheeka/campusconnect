@@ -10,6 +10,8 @@ const itemSchema = new mongoose.Schema(
     imageUrl: { type: String, default: "" },
     status: { type: String, enum: ["open", "claimed"], default: "open" },
     postedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    claimedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    claimedAt: { type: Date },
   },
   { timestamps: true }
 );
