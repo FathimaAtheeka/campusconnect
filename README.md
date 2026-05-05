@@ -530,5 +530,3 @@ npm run preview
 ```
 
 ---
-
-**Happy coding! 🚀**
